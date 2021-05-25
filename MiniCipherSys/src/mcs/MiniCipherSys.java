@@ -131,6 +131,48 @@ public class MiniCipherSys {
 	 */
 	void tripleShift() {
 	    // COMPLETE THIS METHOD
+		SeqNode head = seqRear.next;
+		SeqNode tail = seqRear;
+		SeqNode ptr = seqRear;
+		SeqNode prevA = null;
+		SeqNode nextB = null;
+		SeqNode targetA = null;
+		SeqNode targetB = null;
+		
+		do {
+			if (ptr.next.seqValue == 27 || ptr.next.seqValue == 28) {
+				if (targetA == null) {
+					if (targetA == head) {
+						targetA = ptr.next;
+					} else {
+						targetA = ptr.next;
+						prevA = ptr;
+					}
+				} else if (targetB == null) {
+					if (targetB == tail) {
+						targetB = ptr.next;
+					} else {
+						targetB = ptr.next;
+						nextB = ptr.next.next;
+					}
+					break;
+				}
+			}
+			ptr = ptr.next;
+		} while (true);
+		
+		if (targetA == head && targetB == tail) {
+			// do nothing
+		} else if (targetA == head) {
+			seqRear = targetB;
+		} else if (targetB == tail) {
+			seqRear = prevA;
+		} else {
+			targetB.next = head;
+			tail.next = targetA;
+			prevA.next = nextB;
+			seqRear = prevA;
+		}
 	}
 	
 	/**
@@ -198,6 +240,7 @@ public class MiniCipherSys {
 		System.out.println(aPosition);
 		// flagA();
 		// flagB();
+		tripleShift();
 		
 		
 	    return null;
