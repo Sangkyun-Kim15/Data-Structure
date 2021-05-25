@@ -2,6 +2,7 @@ package mcs;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -77,6 +78,26 @@ public class MiniCipherSys {
 	 */
 	void flagA() {
 	    // COMPLETE THIS METHOD
+		SeqNode ptr = seqRear;
+		SeqNode target;
+		SeqNode after;
+		
+		do {
+			if (ptr.next.seqValue == 27) {
+				target = ptr.next;
+				after = target.next;
+				target.next = after.next;
+				after.next = target;
+				ptr.next = after;
+				
+				if (target == seqRear) {
+					seqRear = after;
+				}
+				break;
+			}
+			ptr = ptr.next;
+		} while (ptr != seqRear);
+		// printList(seqRear);
 	}
 	
 	/**
@@ -84,6 +105,25 @@ public class MiniCipherSys {
 	 */
 	void flagB() {
 	    // COMPLETE THIS METHOD
+		SeqNode ptr = seqRear;
+		SeqNode target;
+		SeqNode after;
+		
+		do {
+			if (ptr.next.seqValue == 28) {
+				target = ptr.next;
+				after = target.next;
+				target.next = after.next.next;
+				after.next.next = target;
+				ptr.next = after;
+				
+				if (target == seqRear) {
+					seqRear = after;
+				}
+				break;
+			}
+			ptr = ptr.next;
+		} while (ptr != seqRear);
 	}
 	
 	/**
@@ -142,6 +182,24 @@ public class MiniCipherSys {
 	public String encrypt(String message) {	
 	    // COMPLETE THIS METHOD
 	    // THE FOLLOWING LINE HAS BEEN ADDED TO MAKE THE METHOD COMPILE
+		String m = "";
+		ArrayList<Integer> aPosition = new ArrayList<Integer>();
+		
+		// get capital letter
+		// get Alphabet 18 position
+		for (int i = 0; i < message.length(); i++) {
+			if (message.charAt(i) > 64 && message.charAt(i) < 91) {
+				System.out.println(message.charAt(i));
+				m += message.charAt(i);
+				aPosition.add((int)message.charAt(i) - 64);
+			}
+		}
+		System.out.println(m);
+		System.out.println(aPosition);
+		// flagA();
+		// flagB();
+		
+		
 	    return null;
 	}
 	
