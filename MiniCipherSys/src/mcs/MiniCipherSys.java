@@ -180,6 +180,34 @@ public class MiniCipherSys {
 	 */
 	void countShift() {		
 	    // COMPLETE THIS METHOD
+		int cnt = 1;
+		int lastNum;
+		SeqNode ptr = seqRear.next;
+		SeqNode prevTarget = null;
+		SeqNode target = null;
+		SeqNode prevRear = null;
+		
+		if (seqRear.seqValue == 28) {
+			lastNum = 27;
+		} else {
+			lastNum = seqRear.seqValue;
+		}
+		
+		do {
+			if (cnt == lastNum - 1) {
+				prevTarget = ptr;
+				target = ptr.next;
+			}
+			if (ptr.next == seqRear) {
+				prevRear = ptr;
+			}
+			cnt += 1;
+			ptr = ptr.next;
+		} while (ptr != seqRear);
+		
+		prevTarget.next = target.next;
+		prevRear.next = target;
+		target.next = seqRear;
 	}
 	
 	/**
@@ -194,7 +222,30 @@ public class MiniCipherSys {
 	int getKey() {
 	    // COMPLETE THIS METHOD
 	    // THE FOLLOWING LINE HAS BEEN ADDED TO MAKE THE METHOD COMPILE
-	    return -1;
+		int key = -1;
+		
+		do {
+			flagA();
+			flagB();
+			tripleShift();
+			countShift();
+			// printList(seqRear);
+			
+			SeqNode ptr = seqRear.next;
+			
+			for (int i = 0; i < seqRear.seqValue - 1; i++) {
+				ptr = ptr.next;
+			}
+			key = ptr.next.seqValue;
+			
+			if (key != 27 && key != 28) {
+				//System.out.println(key);
+				break;
+			}
+			
+		} while (true);
+		
+	    return key;
 	}
 	
 	/**
@@ -224,26 +275,39 @@ public class MiniCipherSys {
 	public String encrypt(String message) {	
 	    // COMPLETE THIS METHOD
 	    // THE FOLLOWING LINE HAS BEEN ADDED TO MAKE THE METHOD COMPILE
+		int key;
 		String m = "";
 		ArrayList<Integer> aPosition = new ArrayList<Integer>();
+		ArrayList<Integer> keyStream = new ArrayList<Integer>();
+		String encrypted = "";
 		
 		// get capital letter
 		// get Alphabet 18 position
 		for (int i = 0; i < message.length(); i++) {
 			if (message.charAt(i) > 64 && message.charAt(i) < 91) {
-				System.out.println(message.charAt(i));
+				//System.out.println(message.charAt(i));
 				m += message.charAt(i);
 				aPosition.add((int)message.charAt(i) - 64);
 			}
 		}
-		System.out.println(m);
-		System.out.println(aPosition);
-		// flagA();
-		// flagB();
-		tripleShift();
+		//System.out.println(m);
+		//System.out.println(aPosition);
+		
+		for (int i = 0; i < aPosition.size(); i++) {
+			keyStream.add(getKey());
+			if (aPosition.get(i) + keyStream.get(i) > 26) {
+				encrypted += (char)(aPosition.get(i) + keyStream.get(i) - 26 + 64);
+			} else {
+				encrypted += (char)(aPosition.get(i) + keyStream.get(i) + 64);
+			}
+		} 
+
+		//System.out.println(aPosition.toString());
+		//System.out.println(keyStream.toString());
+		//System.out.println(encrypted);
 		
 		
-	    return null;
+	    return encrypted;
 	}
 	
 	/**
@@ -255,6 +319,32 @@ public class MiniCipherSys {
 	public String decrypt(String message) {	
 	    // COMPLETE THIS METHOD
 	    // THE FOLLOWING LINE HAS BEEN ADDED TO MAKE THE METHOD COMPILE
-	    return null;
+		int key;
+		String m = "";
+		ArrayList<Integer> aPosition = new ArrayList<Integer>();
+		ArrayList<Integer> keyStream = new ArrayList<Integer>();
+		String decrypted = "";
+		
+		// get capital letter
+		// get Alphabet 18 position
+		for (int i = 0; i < message.length(); i++) {
+			if (message.charAt(i) > 64 && message.charAt(i) < 91) {
+				//System.out.println(message.charAt(i));
+				m += message.charAt(i);
+				aPosition.add((int)message.charAt(i) - 64);
+			}
+		}
+		//System.out.println(m);
+		//System.out.println(aPosition);
+		
+		for (int i = 0; i < aPosition.size(); i++) {
+			keyStream.add(getKey());
+			if (aPosition.get(i) <= keyStream.get(i)) {
+				decrypted += (char)(aPosition.get(i) + 26 - keyStream.get(i) + 64);
+			} else {
+				decrypted += (char)(aPosition.get(i) - keyStream.get(i) + 64);
+			}
+		} 
+	    return decrypted;
 	}
 }
